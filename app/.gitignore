@@ -1,0 +1,26 @@
+/build
+
+# Gradle
+.gradle/
+build/
+app/build/
+app/google-services.json
+app/google-services.plist
+google-services.json
+
+# Local configuration
+local.properties
+
+# IDE specific files
+.idea/
+.vscode/
+
+# Gradle Wrapper
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
+
+# System files
+.DS_Store
+
+# Other sensitive or generated files
+gradle.properties
