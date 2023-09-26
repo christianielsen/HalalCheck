@@ -6,14 +6,11 @@ import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +24,7 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.IOException;
 
@@ -45,7 +43,7 @@ public class ScanActivity extends AppCompatActivity {
     private ToneGenerator toneGen1;
     private String barcodeData;
 
-    private TextView barcodeTV;
+    private TextView productTitleTV, productIngredientTV, productIngredientCountTV;
     private Toolbar toolbar;
 
     @Override
@@ -55,7 +53,9 @@ public class ScanActivity extends AppCompatActivity {
 
         toneGen1 = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
         surfaceView = findViewById(R.id.surface_view);
-        barcodeTV = findViewById(R.id.barcodeTV);
+        productTitleTV = findViewById(R.id.productTitleTV);
+        productIngredientTV = findViewById(R.id.productIngredientTV);
+        productIngredientCountTV = findViewById(R.id.productIngredientCountTV);
         initialiseDetectorsAndSources();
 
         toolbar = findViewById(R.id.toolbar);
@@ -127,27 +127,24 @@ public class ScanActivity extends AppCompatActivity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
                 if (barcodes.size() != 0) {
-                    barcodeTV.post(new Runnable() {
+                    productTitleTV.post(new Runnable() {
                         @Override
                         public void run() {
                             if (barcodes.valueAt(0).email != null) {
-                                barcodeTV.removeCallbacks(null);
+                                productTitleTV.removeCallbacks(null);
                                 barcodeData = barcodes.valueAt(0).email.address;
-                                barcodeTV.setText(barcodeData);
                                 fetchProductByBarcode(barcodeData);
-                                showProductInfoDialog(barcodeData);
+                                showProductInfoDialog();
                                 toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
                             } else {
                                 barcodeData = barcodes.valueAt(0).displayValue;
-                                barcodeTV.setText(barcodeData);
                                 fetchProductByBarcode(barcodeData);
-                                showProductInfoDialog(barcodeData);
+                                showProductInfoDialog();
                                 toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
                             }
                         }
                     });
 
-                    // Set the flag to true to prevent further scans
                 }
             }
 
@@ -155,9 +152,9 @@ public class ScanActivity extends AppCompatActivity {
         });
     }
 
-    private void showProductInfoDialog(String productName) {
-        ProductInfoDialogFragment dialogFragment = ProductInfoDialogFragment.newInstance(productName);
-        dialogFragment.show(getSupportFragmentManager(), "ProductInfoDialog");
+    private void showProductInfoDialog() {
+        BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottomSheetBehavior));
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
     }
 
     private void fetchProductByBarcode(String barcode) {
@@ -174,16 +171,32 @@ public class ScanActivity extends AppCompatActivity {
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Product product = response.body().getProduct();
-                    if (product != null && product.getIngredientsText() != null) {
+                    if (product != null && product.getName() != null && product.getIngredientsText() != null && String.valueOf(product.getIngredientNumber()) != null) {
                         String ingredientsText = product.getIngredientsText();
+                        String name = product.getName();
+                        int ingredientNumber = product.getIngredientNumber();
                         if (ingredientsText != null) {
-                            // Split ingredients text into an array using a delimiter (e.g., comma and space)
-                            String[] ingredientsArray = ingredientsText.split(", ");
+//                            // Split ingredients text into an array using a delimiter (e.g., comma and space)
+//                            String[] ingredientsArray = ingredientsText.split(", ");
+//
+//                            // Iterate through the array and log each ingredient
+//                            for (String ingredient : ingredientsArray) {
+//                                Log.d("AJB", ingredient);
+//                            }
+                            productTitleTV.setPadding(20, 50, 20, 20);
+                            productTitleTV.setTextSize(48);
+                            productTitleTV.setText(name);
 
-                            // Iterate through the array and log each ingredient
-                            for (String ingredient : ingredientsArray) {
-                                Log.d("AJB", ingredient);
-                            }
+                            productIngredientTV.setPadding(20, 20, 20, 20);
+                            productIngredientTV.setTextSize(24);
+//                            productIngredientTV.setText("Ingredients " + "(" + String.valueOf(ingredientNumber) + ") " + ": " + ingredientsText);
+                            String ingredients = String.format(getString(R.string.ingredients), String.valueOf(ingredientNumber), ingredientsText);
+                            productIngredientTV.setText(ingredients);
+
+                            productIngredientCountTV.setPadding(20, 20, 20, 20);
+                            productIngredientCountTV.setTextSize(24);
+                            productIngredientCountTV.setText(String.valueOf(ingredientNumber));
+
                         } else {
                             Log.d("AJB", "No ingredients found for this product.");
                         }
