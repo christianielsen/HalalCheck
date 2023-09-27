@@ -10,6 +10,8 @@ public class Product {
     private int ingredientNumber;
     @SerializedName("product_name")
     private String name;
+    @SerializedName("image_url")
+    private String imageUrl;
 
 
     public String getIngredientsText() {
@@ -22,5 +24,9 @@ public class Product {
 
     public int getIngredientNumber() {
         return ingredientNumber;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

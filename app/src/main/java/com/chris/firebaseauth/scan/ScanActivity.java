@@ -9,6 +9,7 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -25,8 +26,12 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,7 +48,8 @@ public class ScanActivity extends AppCompatActivity {
     private ToneGenerator toneGen1;
     private String barcodeData;
 
-    private TextView productTitleTV, productIngredientTV, productIngredientCountTV;
+    private TextView productTitleTV, productIngredientTV, halalStatusTV;
+    private ImageView productIV;
     private Toolbar toolbar;
 
     @Override
@@ -55,7 +61,8 @@ public class ScanActivity extends AppCompatActivity {
         surfaceView = findViewById(R.id.surface_view);
         productTitleTV = findViewById(R.id.productTitleTV);
         productIngredientTV = findViewById(R.id.productIngredientTV);
-        productIngredientCountTV = findViewById(R.id.productIngredientCountTV);
+        productIV = findViewById(R.id.productIV);
+        halalStatusTV = findViewById(R.id.halalStatusTV);
         initialiseDetectorsAndSources();
 
         toolbar = findViewById(R.id.toolbar);
@@ -171,34 +178,37 @@ public class ScanActivity extends AppCompatActivity {
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Product product = response.body().getProduct();
-                    if (product != null && product.getName() != null && product.getIngredientsText() != null && String.valueOf(product.getIngredientNumber()) != null) {
+                    if (product != null) {
                         String ingredientsText = product.getIngredientsText();
                         String name = product.getName();
                         int ingredientNumber = product.getIngredientNumber();
-                        if (ingredientsText != null) {
-//                            // Split ingredients text into an array using a delimiter (e.g., comma and space)
-//                            String[] ingredientsArray = ingredientsText.split(", ");
-//
-//                            // Iterate through the array and log each ingredient
-//                            for (String ingredient : ingredientsArray) {
-//                                Log.d("AJB", ingredient);
-//                            }
+
+                        if (ingredientsText != null && name != null && ingredientNumber > 0) {
+
                             productTitleTV.setPadding(20, 50, 20, 20);
                             productTitleTV.setTextSize(48);
                             productTitleTV.setText(name);
 
                             productIngredientTV.setPadding(20, 20, 20, 20);
                             productIngredientTV.setTextSize(24);
-//                            productIngredientTV.setText("Ingredients " + "(" + String.valueOf(ingredientNumber) + ") " + ": " + ingredientsText);
                             String ingredients = String.format(getString(R.string.ingredients), String.valueOf(ingredientNumber), ingredientsText);
                             productIngredientTV.setText(ingredients);
 
-                            productIngredientCountTV.setPadding(20, 20, 20, 20);
-                            productIngredientCountTV.setTextSize(24);
-                            productIngredientCountTV.setText(String.valueOf(ingredientNumber));
-
+                            boolean allIngredientsHalal = checkIfHaram(ingredientsText);
+                            updateHalalStatusUI(allIngredientsHalal);
                         } else {
                             Log.d("AJB", "No ingredients found for this product.");
+                        }
+
+                        String imageUrl = product.getImageUrl();
+                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                            Picasso.get()
+                                    .load(imageUrl)
+                                    .placeholder(R.drawable.placeholder_image)
+                                    .error(R.drawable.error_image)
+                                    .into(productIV);
+                        } else {
+                            productIV.setImageResource(R.drawable.placeholder_image);
                         }
 
                         // Handle success, update UI with ingredients
@@ -219,6 +229,56 @@ public class ScanActivity extends AppCompatActivity {
 //                errorTextView.setText("An error occurred while fetching the data.");
             }
         });
+    }
+
+    private boolean checkIfHaram(String ingredients) {
+        List<String> haramIngredients = Arrays.asList(
+                "cochineal",
+                "gelatine",
+                "pork",
+                "edible bone phosphate",  // Remove spaces
+                "shellac",
+                "e120",
+                "e441",
+                "e542",
+                "e904",
+                "alcohol",
+                "ethanol",
+                "lard",
+                "pepsin",
+                "beer",
+                "wine",
+                "liqueur",
+                "rennet",
+                "lecithin",
+                "bacon",
+                "gelatin",
+                "cider",
+                ""
+        );
+
+        String[] ingredientsArray = ingredients.split(", ");
+
+        // Iterate through the array and log each ingredient
+        for (String ingredient : ingredientsArray) {
+            String lowercaseIngredient = ingredient.toLowerCase(Locale.US);
+            if(haramIngredients.contains(lowercaseIngredient)) {
+                return true;
+            }
+        }
+//        List<String> inputString = Arrays.asList(ingredients.toLowerCase().split(", "));
+//
+//        return haramIngredients.stream().allMatch(inputString::contains);
+        return false;
+    }
+
+    private void updateHalalStatusUI(boolean allIngredientsHalal) {
+        halalStatusTV.setTextSize(24);
+        if(!allIngredientsHalal) {
+            halalStatusTV.setText("Halal");
+        } else {
+            halalStatusTV.setText("Haram");
+        }
     }
 
 
