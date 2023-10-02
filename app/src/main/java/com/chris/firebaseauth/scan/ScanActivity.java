@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -18,7 +19,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.chris.firebaseauth.APICall;
-import com.chris.firebaseauth.BuildConfig;
 import com.chris.firebaseauth.R;
 import com.chris.firebaseauth.scan.models.History;
 import com.chris.firebaseauth.scan.models.Product;
@@ -33,14 +33,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,19 +51,16 @@ public class ScanActivity extends AppCompatActivity {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private static final int REQUEST_CAMERA_PERMISSION = 201;
-    //This class provides methods to play DTMF tones
     private ToneGenerator toneGen1;
     private String barcodeData;
-
     private TextView productTitleTV, productIngredientTV, halalStatusTV;
     private ImageView productIV;
     private Toolbar toolbar;
-
     private CollectionReference usersRef, historyRef;
     private DocumentReference userDocRef;
     private FirebaseUser user;
     private FirebaseAuth auth;
-    private String DB_URL = BuildConfig.FIREBASE_DB_URL;
+    private boolean barcodeScanned = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,31 +146,34 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if (barcodes.size() != 0) {
-                    productTitleTV.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (barcodes.valueAt(0).email != null) {
-                                productTitleTV.removeCallbacks(null);
-                                barcodeData = barcodes.valueAt(0).email.address;
-                                fetchProductByBarcode(barcodeData);
-                                showProductInfoDialog();
-                                addHistory(barcodeData);
-                                toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
-                            } else {
-                                barcodeData = barcodes.valueAt(0).displayValue;
-                                fetchProductByBarcode(barcodeData);
-                                showProductInfoDialog();
-                                addHistory(barcodeData);
-                                toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
-                            }
-                        }
-                    });
+                if (!barcodeScanned) {
+                    if (barcodes.size() != 0) {
+                        productTitleTV.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (barcodes.valueAt(0).email != null) {
+                                    productTitleTV.removeCallbacks(null);
+                                    barcodeData = barcodes.valueAt(0).email.address;
+                                    fetchProductByBarcode(barcodeData);
+                                    showProductInfoDialog();
+                                    addHistory(barcodeData);
+                                    toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
+                                } else {
+                                    barcodeData = barcodes.valueAt(0).displayValue;
+                                    fetchProductByBarcode(barcodeData);
+                                    showProductInfoDialog();
+                                    addHistory(barcodeData);
+                                    toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
+                                }
+                                barcodeScanned = true;
+                                // Reset the flag after processing the barcode
+                                new Handler().postDelayed(() -> barcodeScanned = false, 3000); // Reset after 3 seconds
 
+                            }
+                        });
+                    }
                 }
             }
-
-
         });
     }
 
@@ -219,7 +215,7 @@ public class ScanActivity extends AppCompatActivity {
                             boolean allIngredientsHalal = checkIfHaram(ingredientsText);
                             updateHalalStatusUI(allIngredientsHalal);
                         } else {
-                            Log.d("AJB", "No ingredients found for this product.");
+                            productIngredientTV.setText("No ingredients found");
                         }
 
                         String imageUrl = product.getImageUrl();
@@ -277,26 +273,12 @@ public class ScanActivity extends AppCompatActivity {
                 "cider"
         );
 
-//        String[] ingredientsArray = ingredients.split(", ");
-//
-//        // Iterate through the array and log each ingredient
-//        for (String ingredient : ingredientsArray) {
-//            String lowercaseIngredient = ingredient.toLowerCase(Locale.US);
-//            if(haramIngredients.contains(lowercaseIngredient)) {
-//                return true;
-//            }
-//        }
-
         for (String ingredient : haramIngredients) {
             if (ingredients.toLowerCase(Locale.US).contains(ingredient)) {
                 return true;
             }
         }
 
-
-//        List<String> inputString = Arrays.asList(ingredients.toLowerCase().split(", "));
-//
-//        return haramIngredients.stream().allMatch(inputString::contains);
         return false;
     }
 
@@ -316,14 +298,16 @@ public class ScanActivity extends AppCompatActivity {
         usersRef = db.collection("users");
         historyRef = usersRef.document(userId).collection("history");
 
-        historyRef.get().addOnCompleteListener(task -> {
+        DocumentReference barcodeRef = historyRef.document(barcode);
+
+        barcodeRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                if (!task.getResult().isEmpty()) {
+                if (task.getResult().exists()) {
                     // Document already exists; no need to add it again
                     Log.d("AJB", "History item with barcode " + barcode + " already exists");
                 } else {
                     // Document does not exist; add it
-                    historyRef.add(new History(barcode))
+                    barcodeRef.set(new History(barcode))
                             .addOnSuccessListener(aVoid -> {
                                 Log.d("AJB", "History item added successfully");
                             })
@@ -335,6 +319,7 @@ public class ScanActivity extends AppCompatActivity {
                 Log.e("AJB", "Error checking for existing history items: " + task.getException().getMessage());
             }
         });
+
     }
 
 }
