@@ -1,27 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
     tools:context=".profile.ProfileFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/profile" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/barcodeRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/user_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/bottomSheetBehavior"-->
+<!--        style="@style/Widget.Material3.BottomSheet"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="65dp"-->
+<!--        app:behavior_peekHeight="0dp"-->
+<!--        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">-->
+
+<!--        <com.google.android.material.bottomsheet.BottomSheetDragHandleView-->
+<!--            android:id="@+id/drag_handle"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+
+<!--        <ScrollView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/productIV"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="16dp"-->
+<!--                    android:contentDescription="@string/product_image_description"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/placeholder_image" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/productTitleTV"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Title" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/productIngredientTV"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Ingredients" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/halalStatusTV"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="HALAL STATUS" />-->
+
+
+<!--            </LinearLayout>-->
+<!--        </ScrollView>-->
+
+
+<!--    </FrameLayout>-->
 
     <Button
         android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logout" />
+        android:text="@string/logout"
+        app:layout_constraintTop_toBottomOf="@id/barcodeRecyclerView"/>
 
 
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
