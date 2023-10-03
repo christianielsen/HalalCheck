@@ -13,28 +13,44 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.chris.firebaseauth.APICall;
 import com.chris.firebaseauth.auth.Login;
 import com.chris.firebaseauth.R;
+import com.chris.firebaseauth.scan.models.Product;
+import com.chris.firebaseauth.scan.models.ProductResponse;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
-public class ProfileFragment extends Fragment {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-    FirebaseAuth auth;
-    TextView textView;
-    Button button;
-    FirebaseUser user;
-    RecyclerView recyclerView;
-    BarcodeAdapter adapter;
-    List<String> barcodeList = new ArrayList<>();
+public class ProfileFragment extends Fragment implements BarcodeAdapter.OnItemClickListener {
+
+    private FirebaseAuth auth;
+    private TextView productTitleTV, productIngredientTV, halalStatusTV;
+    private ImageView productIV;
+    private Button button;
+    private FirebaseUser user;
+    private RecyclerView recyclerView;
+    private BarcodeAdapter adapter;
+    private List<String> barcodeList = new ArrayList<>();
 
 
     public ProfileFragment() {
@@ -61,14 +77,20 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
         button = view.findViewById(R.id.logout);
-//        textView = view.findViewById(R.id.user_details);
+        productTitleTV = view.findViewById(R.id.productTitleTV2);
+        productIngredientTV = view.findViewById(R.id.productIngredientTV2);
+        halalStatusTV = view.findViewById(R.id.halalStatusTV2);
+        productIV = view.findViewById(R.id.productIV2);
+
+
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
         recyclerView = view.findViewById(R.id.barcodeRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new BarcodeAdapter(barcodeList);
+        adapter = new BarcodeAdapter(barcodeList, this);
         recyclerView.setAdapter(adapter);
 
         if (user == null) {
@@ -111,4 +133,127 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void onItemClick(String barcode) {
+        Toast.makeText(getActivity(), barcode, Toast.LENGTH_LONG).show();
+        fetchProductByBarcode(barcode);
+        showProductInfoDialog();
+    }
+
+    private void showProductInfoDialog() {
+        BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(getActivity().findViewById(R.id.bottomSheetBehavior2));
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+    }
+
+    private void fetchProductByBarcode(String barcode) {
+        // Make an API request using Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://world.openfoodfacts.org/api/v0/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        APICall apiCall = retrofit.create(APICall.class);
+        Call<ProductResponse> call = apiCall.getProductByBarcode(barcode);
+
+        call.enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Product product = response.body().getProduct();
+                    if (product != null) {
+                        String ingredientsText = product.getIngredientsText();
+                        String name = product.getName();
+                        int ingredientNumber = product.getIngredientNumber();
+
+                        if (ingredientsText != null && name != null && ingredientNumber > 0) {
+
+                            productTitleTV.setPadding(20, 50, 20, 20);
+                            productTitleTV.setTextSize(48);
+                            productTitleTV.setText(name);
+
+                            productIngredientTV.setPadding(20, 20, 20, 20);
+                            productIngredientTV.setTextSize(24);
+                            String ingredients = String.format(getString(R.string.ingredients), String.valueOf(ingredientNumber), ingredientsText);
+                            productIngredientTV.setText(ingredients);
+
+                            boolean allIngredientsHalal = checkIfHaram(ingredientsText);
+                            updateHalalStatusUI(allIngredientsHalal);
+                        } else {
+                            productIngredientTV.setText("No ingredients found");
+                        }
+
+                        String imageUrl = product.getImageUrl();
+                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                            Picasso.get()
+                                    .load(imageUrl)
+                                    .placeholder(R.drawable.placeholder_image)
+                                    .error(R.drawable.error_image)
+                                    .into(productIV);
+                        } else {
+                            productIV.setImageResource(R.drawable.placeholder_image);
+                        }
+
+                        // Handle success, update UI with ingredients
+                    } else {
+                        // Handle case where no ingredients are found
+                        Log.d("AJB", "No ingredients found for this product.");
+                    }
+                } else {
+                    // Handle API error or product not found
+                    Log.d("AJB", "Product not found.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                // Handle network or other errors
+            }
+        });
+    }
+
+    private boolean checkIfHaram(String ingredients) {
+        List<String> haramIngredients = Arrays.asList(
+                "cochineal",
+                "gelatine",
+                "pork",
+                "edible bone phosphate",
+                "bone",
+                "shellac",
+                "e120",
+                "e441",
+                "e542",
+                "e904",
+                "alcohol",
+                "ethanol",
+                "lard",
+                "pepsin",
+                "beer",
+                "wine",
+                "liqueur",
+                "rennet",
+                "lecithin",
+                "bacon",
+                "gelatin",
+                "cider"
+        );
+
+        for (String ingredient : haramIngredients) {
+            if (ingredients.toLowerCase(Locale.US).contains(ingredient)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void updateHalalStatusUI(boolean allIngredientsHalal) {
+        halalStatusTV.setTextSize(24);
+        if (!allIngredientsHalal) {
+            halalStatusTV.setText("Halal");
+        } else {
+            halalStatusTV.setText("Haram");
+        }
+    }
+
+
 }

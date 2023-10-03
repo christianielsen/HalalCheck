@@ -14,69 +14,69 @@
         android:layout_height="match_parent" />
 
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/bottomSheetBehavior"-->
-<!--        style="@style/Widget.Material3.BottomSheet"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_marginTop="65dp"-->
-<!--        app:behavior_peekHeight="0dp"-->
-<!--        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">-->
+    <FrameLayout
+        android:id="@+id/bottomSheetBehavior2"
+        style="@style/Widget.Material3.BottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="65dp"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-<!--        <com.google.android.material.bottomsheet.BottomSheetDragHandleView-->
-<!--            android:id="@+id/drag_handle"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content" />-->
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-<!--        <ScrollView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical">-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-<!--                <ImageView-->
-<!--                    android:id="@+id/productIV"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="16dp"-->
-<!--                    android:contentDescription="@string/product_image_description"-->
-<!--                    android:scaleType="centerCrop"-->
-<!--                    android:src="@drawable/placeholder_image" />-->
+                <ImageView
+                    android:id="@+id/productIV2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:contentDescription="@string/product_image_description"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder_image" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/productTitleTV"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Title" />-->
+                <TextView
+                    android:id="@+id/productTitleTV2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Title" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/productIngredientTV"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Ingredients" />-->
+                <TextView
+                    android:id="@+id/productIngredientTV2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ingredients" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/halalStatusTV"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="HALAL STATUS" />-->
-
-
-<!--            </LinearLayout>-->
-<!--        </ScrollView>-->
+                <TextView
+                    android:id="@+id/halalStatusTV2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="HALAL STATUS" />
 
 
-<!--    </FrameLayout>-->
+            </LinearLayout>
+        </ScrollView>
+
+
+    </FrameLayout>
 
     <Button
         android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/logout"
-        app:layout_constraintTop_toBottomOf="@id/barcodeRecyclerView"/>
+        app:layout_constraintTop_toBottomOf="@id/barcodeRecyclerView" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

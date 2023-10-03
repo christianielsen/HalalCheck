@@ -15,9 +15,11 @@ import java.util.List;
 public class BarcodeAdapter extends RecyclerView.Adapter<BarcodeAdapter.ViewHolder> {
 
     private List<String> barcodeList;
+    private OnItemClickListener listener;
 
-    public BarcodeAdapter(List<String> barcodeList) {
+    public BarcodeAdapter(List<String> barcodeList, OnItemClickListener listener) {
         this.barcodeList = barcodeList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -32,6 +34,15 @@ public class BarcodeAdapter extends RecyclerView.Adapter<BarcodeAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String barcode = barcodeList.get(position);
         holder.barcodeTV.setText(barcode);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(listener != null) {
+                    listener.onItemClick(barcode);
+                }
+            }
+        });
     }
 
     @Override
@@ -45,5 +56,9 @@ public class BarcodeAdapter extends RecyclerView.Adapter<BarcodeAdapter.ViewHold
             super(view);
             barcodeTV = view.findViewById(R.id.barcodeTV);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(String barcode);
     }
 }
