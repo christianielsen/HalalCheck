@@ -78,13 +78,8 @@ public class ScanActivity extends AppCompatActivity {
         halalStatusTV = findViewById(R.id.halalStatusTV);
         initialiseDetectorsAndSources();
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -267,7 +262,6 @@ public class ScanActivity extends AppCompatActivity {
                 "wine",
                 "liqueur",
                 "rennet",
-                "lecithin",
                 "bacon",
                 "gelatin",
                 "cider"

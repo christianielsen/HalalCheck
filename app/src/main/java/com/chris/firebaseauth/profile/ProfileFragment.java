@@ -231,7 +231,6 @@ public class ProfileFragment extends Fragment implements BarcodeAdapter.OnItemCl
                 "wine",
                 "liqueur",
                 "rennet",
-                "lecithin",
                 "bacon",
                 "gelatin",
                 "cider"

@@ -41,7 +41,7 @@
         <activity
             android:name=".scan.ScanActivity"
             android:exported="false"
-            android:theme="@style/Theme.Material3.Light.NoActionBar">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="com.google.android.gms.version"
                 android:value="@integer/google_play_services_version"/>
@@ -50,11 +50,11 @@
         <activity
             android:name=".auth.Register"
             android:exported="false"
-            android:theme="@style/Theme.Material3.Light.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".auth.Login"
             android:exported="true"
-            android:theme="@style/Theme.Material3.Light.NoActionBar" >
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
