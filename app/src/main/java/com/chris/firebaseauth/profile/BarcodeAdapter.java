@@ -9,15 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chris.firebaseauth.R;
+import com.chris.firebaseauth.scan.models.History;
 
 import java.util.List;
 
 public class BarcodeAdapter extends RecyclerView.Adapter<BarcodeAdapter.ViewHolder> {
 
-    private List<String> barcodeList;
+    private List<History> barcodeList;
     private OnItemClickListener listener;
 
-    public BarcodeAdapter(List<String> barcodeList, OnItemClickListener listener) {
+    public BarcodeAdapter(List<History> barcodeList, OnItemClickListener listener) {
         this.barcodeList = barcodeList;
         this.listener = listener;
     }
@@ -32,14 +33,15 @@ public class BarcodeAdapter extends RecyclerView.Adapter<BarcodeAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String barcode = barcodeList.get(position);
-        holder.barcodeTV.setText(barcode);
+        History product = barcodeList.get(position);
+        holder.barcodeTV.setText(product.getBarcode());
+        holder.productNameTV.setText(product.getProductName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(listener != null) {
-                    listener.onItemClick(barcode);
+                    listener.onItemClick(product.getBarcode());
                 }
             }
         });
@@ -52,9 +54,11 @@ public class BarcodeAdapter extends RecyclerView.Adapter<BarcodeAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView barcodeTV;
+        private TextView productNameTV;
         public ViewHolder(View view) {
             super(view);
             barcodeTV = view.findViewById(R.id.barcodeTV);
+            productNameTV = view.findViewById(R.id.productNameTV);
         }
     }
 

@@ -151,13 +151,11 @@ public class ScanActivity extends AppCompatActivity {
                                     barcodeData = barcodes.valueAt(0).email.address;
                                     fetchProductByBarcode(barcodeData);
                                     showProductInfoDialog();
-                                    addHistory(barcodeData);
                                     toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
                                 } else {
                                     barcodeData = barcodes.valueAt(0).displayValue;
                                     fetchProductByBarcode(barcodeData);
                                     showProductInfoDialog();
-                                    addHistory(barcodeData);
                                     toneGen1.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
                                 }
                                 barcodeScanned = true;
@@ -206,6 +204,8 @@ public class ScanActivity extends AppCompatActivity {
                             productIngredientTV.setTextSize(24);
                             String ingredients = String.format(getString(R.string.ingredients), String.valueOf(ingredientNumber), ingredientsText);
                             productIngredientTV.setText(ingredients);
+
+                            addHistory(barcodeData, name);
 
                             boolean allIngredientsHalal = checkIfHaram(ingredientsText);
                             updateHalalStatusUI(allIngredientsHalal);
@@ -285,7 +285,7 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
-    private void addHistory(String barcode) {
+    private void addHistory(String barcode, String productName) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String userId = user.getUid();
 
@@ -301,7 +301,7 @@ public class ScanActivity extends AppCompatActivity {
                     Log.d("AJB", "History item with barcode " + barcode + " already exists");
                 } else {
                     // Document does not exist; add it
-                    barcodeRef.set(new History(barcode))
+                    barcodeRef.set(new History(barcode, productName))
                             .addOnSuccessListener(aVoid -> {
                                 Log.d("AJB", "History item added successfully");
                             })

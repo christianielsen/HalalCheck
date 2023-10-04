@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.chris.firebaseauth.APICall;
 import com.chris.firebaseauth.auth.Login;
 import com.chris.firebaseauth.R;
+import com.chris.firebaseauth.scan.models.History;
 import com.chris.firebaseauth.scan.models.Product;
 import com.chris.firebaseauth.scan.models.ProductResponse;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -50,7 +51,7 @@ public class ProfileFragment extends Fragment implements BarcodeAdapter.OnItemCl
     private FirebaseUser user;
     private RecyclerView recyclerView;
     private BarcodeAdapter adapter;
-    private List<String> barcodeList = new ArrayList<>();
+    private List<History> barcodeList = new ArrayList<>();
 
 
     public ProfileFragment() {
@@ -124,8 +125,10 @@ public class ProfileFragment extends Fragment implements BarcodeAdapter.OnItemCl
             if (task.isSuccessful()) {
                 barcodeList.clear();
                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                    String barcode = documentSnapshot.getId();
-                    barcodeList.add(barcode);
+                    String barcode = documentSnapshot.getString("barcode");
+                    String productName = documentSnapshot.getString("productName");
+                    History product = new History(barcode, productName);
+                    barcodeList.add(product);
                 }
                 adapter.notifyDataSetChanged();
             } else {

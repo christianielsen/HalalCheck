@@ -2,13 +2,11 @@ package com.chris.firebaseauth.scan.models;
 
 public class History {
     private String barcode;
+    private String productName;
 
-    public History() {
-
-    }
-
-    public History(String barcode) {
+    public History(String barcode, String productName) {
         this.barcode = barcode;
+        this.productName = productName;
     }
 
     public String getBarcode() {
@@ -17,5 +15,13 @@ public class History {
 
     public void setBarcode(String barcode) {
         this.barcode = barcode;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 }
