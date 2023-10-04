@@ -1,4 +1,4 @@
-package com.chris.firebaseauth.profile;
+package com.chris.firebaseauth.history;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.telephony.RadioAccessSpecifier;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +41,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ProfileFragment extends Fragment implements BarcodeAdapter.OnItemClickListener {
+public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemClickListener {
 
     private FirebaseAuth auth;
     private TextView productTitleTV, productIngredientTV, halalStatusTV;
@@ -54,12 +53,12 @@ public class ProfileFragment extends Fragment implements BarcodeAdapter.OnItemCl
     private List<History> barcodeList = new ArrayList<>();
 
 
-    public ProfileFragment() {
+    public HistoryFragment() {
         // Required empty public constructor
     }
 
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
+    public static HistoryFragment newInstance(String param1, String param2) {
+        HistoryFragment fragment = new HistoryFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -77,7 +76,7 @@ public class ProfileFragment extends Fragment implements BarcodeAdapter.OnItemCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
 
         button = view.findViewById(R.id.logout);
         productTitleTV = view.findViewById(R.id.productTitleTV2);

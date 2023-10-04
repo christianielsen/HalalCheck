@@ -1,4 +1,4 @@
-package com.chris.firebaseauth.profile;
+package com.chris.firebaseauth.history;
 
 import android.view.LayoutInflater;
 import android.view.View;

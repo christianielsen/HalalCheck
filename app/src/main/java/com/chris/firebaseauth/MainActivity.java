@@ -2,20 +2,16 @@ package com.chris.firebaseauth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.chris.firebaseauth.home.HomeFragment;
 import com.chris.firebaseauth.map.MapFragment;
-import com.chris.firebaseauth.profile.ProfileFragment;
+import com.chris.firebaseauth.history.HistoryFragment;
 import com.chris.firebaseauth.scan.ScanActivity;
 import com.chris.firebaseauth.settings.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -53,10 +49,10 @@ public class MainActivity extends AppCompatActivity {
                     FragmentTransaction map = getSupportFragmentManager().beginTransaction();
                     map.replace(R.id.mainFrame, mapFragment, "");
                     map.commit();
-                } else if (itemId == R.id.profile) {
-                    ProfileFragment profileFragment = new ProfileFragment();
+                } else if (itemId == R.id.history) {
+                    HistoryFragment historyFragment = new HistoryFragment();
                     FragmentTransaction profile = getSupportFragmentManager().beginTransaction();
-                    profile.replace(R.id.mainFrame, profileFragment, "");
+                    profile.replace(R.id.mainFrame, historyFragment, "");
                     profile.commit();
                 } else if (itemId == R.id.settings) {
                     SettingsFragment settingsFragment = new SettingsFragment();
