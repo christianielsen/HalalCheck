@@ -13,13 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
     <FrameLayout
         android:id="@+id/bottomSheetBehavior2"
         style="@style/Widget.Material3.BottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="65dp"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -41,9 +39,8 @@
                     android:id="@+id/productIV2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_margin="24dp"
                     android:contentDescription="@string/product_image_description"
-                    android:scaleType="centerCrop"
                     android:src="@drawable/placeholder_image" />
 
                 <TextView
