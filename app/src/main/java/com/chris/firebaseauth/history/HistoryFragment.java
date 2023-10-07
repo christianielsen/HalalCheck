@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,8 @@ public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemCl
     private TextView productTitleTV, productIngredientTV, halalStatusTV;
     private ImageView productIV;
     private Button button;
+    private ProgressBar progressBar;
+    private ScrollView scrollView;
     private FirebaseUser user;
     private RecyclerView recyclerView;
     private BarcodeAdapter adapter;
@@ -83,7 +87,8 @@ public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemCl
         productIngredientTV = view.findViewById(R.id.productIngredientTV2);
         halalStatusTV = view.findViewById(R.id.halalStatusTV2);
         productIV = view.findViewById(R.id.productIV2);
-
+        progressBar = view.findViewById(R.id.progressBar);
+        scrollView = view.findViewById(R.id.scrollView);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -149,6 +154,9 @@ public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemCl
     }
 
     private void fetchProductByBarcode(String barcode) {
+        progressBar.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.GONE);
+
         // Make an API request using Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://world.openfoodfacts.org/api/v0/")
@@ -160,6 +168,9 @@ public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemCl
         call.enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                progressBar.setVisibility(View.GONE);
+                scrollView.setVisibility(View.VISIBLE);
+
                 if (response.isSuccessful() && response.body() != null) {
                     Product product = response.body().getProduct();
                     if (product != null) {
@@ -209,6 +220,9 @@ public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemCl
             @Override
             public void onFailure(Call<ProductResponse> call, Throwable t) {
                 // Handle network or other errors
+                progressBar.setVisibility(View.GONE);
+                scrollView.setVisibility(View.VISIBLE);
+
             }
         });
     }

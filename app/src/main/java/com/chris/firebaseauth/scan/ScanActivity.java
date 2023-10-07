@@ -11,6 +11,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -55,7 +57,8 @@ public class ScanActivity extends AppCompatActivity {
     private String barcodeData;
     private TextView productTitleTV, productIngredientTV, halalStatusTV;
     private ImageView productIV;
-    private Toolbar toolbar;
+    private ProgressBar progressBar;
+    private ScrollView scrollView;
     private CollectionReference usersRef, historyRef;
     private DocumentReference userDocRef;
     private FirebaseUser user;
@@ -76,6 +79,8 @@ public class ScanActivity extends AppCompatActivity {
         productIngredientTV = findViewById(R.id.productIngredientTV);
         productIV = findViewById(R.id.productIV);
         halalStatusTV = findViewById(R.id.halalStatusTV);
+        progressBar = findViewById(R.id.progressBar);
+        scrollView = findViewById(R.id.scrollView);
         initialiseDetectorsAndSources();
 
         ActionBar actionBar = getSupportActionBar();
@@ -176,6 +181,8 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     private void fetchProductByBarcode(String barcode) {
+        progressBar.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.GONE);
         // Make an API request using Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://world.openfoodfacts.org/api/v0/")
@@ -187,6 +194,9 @@ public class ScanActivity extends AppCompatActivity {
         call.enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                progressBar.setVisibility(View.GONE);
+                scrollView.setVisibility(View.VISIBLE);
+
                 if (response.isSuccessful() && response.body() != null) {
                     Product product = response.body().getProduct();
                     if (product != null) {
@@ -238,6 +248,8 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ProductResponse> call, Throwable t) {
                 // Handle network or other errors
+                progressBar.setVisibility(View.GONE);
+                scrollView.setVisibility(View.VISIBLE);
             }
         });
     }
