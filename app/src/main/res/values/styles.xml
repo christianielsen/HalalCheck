@@ -15,4 +15,13 @@
         <!--Alpha can be added optionally to achieve nice color blend-->
         <item name="android:alpha">0.3</item>
     </style>
+
+    <style name="Widget.App.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Switch" parent="">
+<!--        <item name="colorPrimary">@color/purple_500</item>-->
+<!--        <item name="colorSurfaceVariant">@color/purple_200</item>-->
+    </style>
 </resources>
