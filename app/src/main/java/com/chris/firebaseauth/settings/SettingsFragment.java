@@ -1,5 +1,6 @@
 package com.chris.firebaseauth.settings;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -44,7 +45,7 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         materialSwitch = view.findViewById(R.id.materialSwitch);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         boolean isDarkModeEnabled = sharedPreferences.getBoolean("dark_mode", false);
         materialSwitch.setChecked(isDarkModeEnabled);
