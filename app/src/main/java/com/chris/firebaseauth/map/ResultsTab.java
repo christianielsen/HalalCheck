@@ -1,25 +1,19 @@
 package com.chris.firebaseauth.map;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
 import com.chris.firebaseauth.R;
 import com.chris.firebaseauth.databinding.FragmentResultsTabBinding;
 import com.chris.firebaseauth.map.models.NearbyPlaces;
-import com.google.android.gms.maps.MapView;
 
 import java.util.ArrayList;
 import java.util.List;

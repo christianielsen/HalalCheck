@@ -1,11 +1,5 @@
 package com.chris.firebaseauth;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,9 +7,14 @@ import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+
+import com.chris.firebaseauth.history.HistoryFragment;
 import com.chris.firebaseauth.home.HomeFragment;
 import com.chris.firebaseauth.map.MapFragment;
-import com.chris.firebaseauth.history.HistoryFragment;
 import com.chris.firebaseauth.scan.ScanActivity;
 import com.chris.firebaseauth.settings.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

@@ -2,11 +2,6 @@ package com.chris.firebaseauth.history;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +13,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.chris.firebaseauth.APICall;
-import com.chris.firebaseauth.auth.Login;
 import com.chris.firebaseauth.R;
+import com.chris.firebaseauth.auth.Login;
 import com.chris.firebaseauth.scan.models.History;
 import com.chris.firebaseauth.scan.models.Product;
 import com.chris.firebaseauth.scan.models.ProductResponse;
