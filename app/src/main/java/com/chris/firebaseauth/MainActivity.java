@@ -2,10 +2,14 @@ package com.chris.firebaseauth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -20,49 +24,70 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String SELECTED_FRAGMENT_KEY = "selected_fragment";
+
     BottomNavigationView navigationView;
     FloatingActionButton fab;
 
+    HomeFragment homeFragment;
+    MapFragment mapFragment;
+    HistoryFragment historyFragment;
+    SettingsFragment settingsFragment;
+
+    Fragment selectedFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isDarkModeEnabled = sharedPreferences.getBoolean("dark_mode", false);
+        if (isDarkModeEnabled) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         navigationView = findViewById(R.id.bottomNav);
         fab = findViewById(R.id.fab);
 
-        HomeFragment homeFragment = new HomeFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.mainFrame, homeFragment, "");
-        fragmentTransaction.commit();
+        homeFragment = new HomeFragment();
+        mapFragment = new MapFragment();
+        historyFragment = new HistoryFragment();
+        settingsFragment = new SettingsFragment();
+
+        // Check if there's a saved instance state
+        if (savedInstanceState != null) {
+            // Restore the selected fragment
+            selectedFragment = getSupportFragmentManager().getFragment(savedInstanceState, SELECTED_FRAGMENT_KEY);
+        } else {
+            selectedFragment = homeFragment; // Default fragment
+        }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, selectedFragment, "").commit();
 
         navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if (itemId == R.id.home) {
-                    FragmentTransaction home = getSupportFragmentManager().beginTransaction();
-                    home.replace(R.id.mainFrame, homeFragment, "");
-                    home.commit();
+                    selectedFragment = homeFragment;
                 } else if (itemId == R.id.map) {
-                    MapFragment mapFragment = new MapFragment();
-                    FragmentTransaction map = getSupportFragmentManager().beginTransaction();
-                    map.replace(R.id.mainFrame, mapFragment, "");
-                    map.commit();
+                    selectedFragment = mapFragment;
                 } else if (itemId == R.id.history) {
-                    HistoryFragment historyFragment = new HistoryFragment();
-                    FragmentTransaction profile = getSupportFragmentManager().beginTransaction();
-                    profile.replace(R.id.mainFrame, historyFragment, "");
-                    profile.commit();
+                    selectedFragment = historyFragment;
                 } else if (itemId == R.id.settings) {
-                    SettingsFragment settingsFragment = new SettingsFragment();
-                    FragmentTransaction settings = getSupportFragmentManager().beginTransaction();
-                    settings.replace(R.id.mainFrame, settingsFragment, "");
-                    settings.commit();
+                    selectedFragment = settingsFragment;
                 }
+
+                // Replace the fragment
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mainFrame, selectedFragment, "")
+                        .commit();
+
                 return true;
             }
-
         });
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,9 +97,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
-
-
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save the currently selected fragment
+        getSupportFragmentManager().putFragment(outState, SELECTED_FRAGMENT_KEY, selectedFragment);
+    }
 }

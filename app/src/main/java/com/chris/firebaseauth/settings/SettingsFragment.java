@@ -1,10 +1,13 @@
 package com.chris.firebaseauth.settings;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 public class SettingsFragment extends Fragment {
 
     private MaterialSwitch materialSwitch;
+    private SharedPreferences sharedPreferences;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -43,14 +47,18 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         materialSwitch = view.findViewById(R.id.materialSwitch);
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+
+        boolean isDarkModeEnabled = sharedPreferences.getBoolean("dark_mode", false);
+        materialSwitch.setChecked(isDarkModeEnabled);
+
         materialSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) {
-                    Toast.makeText(getActivity(), "Checked", Toast.LENGTH_LONG).show();
+                sharedPreferences.edit().putBoolean("dark_mode", b).apply();
+                if (b) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 } else {
-                    Toast.makeText(getActivity(), "Unchecked", Toast.LENGTH_LONG).show();
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
             }
