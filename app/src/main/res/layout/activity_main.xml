@@ -21,7 +21,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
-
     <!-- Bottom Navigation View -->
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
@@ -48,7 +47,7 @@
         android:id="@+id/fab"
         android:backgroundTint="?attr/colorPrimary"
         android:tint="?attr/colorPrimary"
-        app:tint="?attr/colorSecondary"
+        app:tint="?attr/colorAccent"
         app:backgroundTint="?attr/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

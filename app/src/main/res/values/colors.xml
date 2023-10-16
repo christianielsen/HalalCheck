@@ -4,7 +4,9 @@
 <!--    <color name="purple_500">#FF6200EE</color>-->
 <!--    <color name="purple_700">#FF3700B3</color>-->
 
-    <color name="colorAccent">#e9c46a</color>
+    <color name="colorAccent">#f4a261</color>
+    <color name="colorAccent2">#e76f51</color>
+    <color name="colorAccent3">#e9c46a</color>
     <color name="colorPrimary">#2a9d8f</color>
     <color name="colorSecondary">#264653</color>
 
