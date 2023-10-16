@@ -47,7 +47,6 @@ public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemCl
     private FirebaseAuth auth;
     private TextView productTitleTV, productIngredientTV, halalStatusTV;
     private ImageView productIV;
-    private Button button;
     private ProgressBar progressBar;
     private ScrollView scrollView;
     private FirebaseUser user;
@@ -81,7 +80,6 @@ public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemCl
 
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        button = view.findViewById(R.id.logout);
         productTitleTV = view.findViewById(R.id.productTitleTV2);
         productIngredientTV = view.findViewById(R.id.productIngredientTV2);
         halalStatusTV = view.findViewById(R.id.halalStatusTV2);
@@ -105,16 +103,6 @@ public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemCl
 //            textView.setText("Email: " + user.getEmail() + "Uid: " + user.getUid() + "ProviderData: " + user.getProviderData());
             fetchBarcodeData();
         }
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getActivity(), Login.class);
-                startActivity(intent);
-                getActivity().finish();
-            }
-        });
 
         return view;
     }
