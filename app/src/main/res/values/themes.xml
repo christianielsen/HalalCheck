@@ -12,5 +12,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Theme.Material3.Light" parent="Base.Theme.Material3.Light" />
 </resources>
