@@ -242,5 +242,8 @@ public class MapTab extends Fragment implements OnMapReadyCallback, GoogleMap.On
                 });
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 }

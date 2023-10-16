@@ -4,19 +4,19 @@
     tools:ignore="HardcodedText">
 
     <item
-        android:id="@+id/home"
+        android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home"
         android:title="Home" />
     <item
-        android:id="@+id/map"
+        android:id="@+id/navigation_map"
         android:icon="@drawable/ic_map"
         android:title="Map" />
     <item
-        android:id="@+id/history"
+        android:id="@+id/navigation_history"
         android:icon="@drawable/ic_history"
         android:title="History" />
     <item
-        android:id="@+id/settings"
+        android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings"
         android:title="Settings" />
 

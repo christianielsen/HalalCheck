@@ -11,6 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.chris.firebaseauth.history.HistoryFragment;
 import com.chris.firebaseauth.home.HomeFragment;
@@ -22,18 +26,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String SELECTED_FRAGMENT_KEY = "selected_fragment";
-
-    BottomNavigationView navigationView;
     FloatingActionButton fab;
 
-    HomeFragment homeFragment;
-    MapFragment mapFragment;
-    HistoryFragment historyFragment;
-    SettingsFragment settingsFragment;
-
-    Fragment selectedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,42 +42,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navigationView = findViewById(R.id.bottomNav);
+        BottomNavigationView navView = findViewById(R.id.bottomNav);
         fab = findViewById(R.id.fab);
 
-        homeFragment = new HomeFragment();
-        mapFragment = new MapFragment();
-        historyFragment = new HistoryFragment();
-        settingsFragment = new SettingsFragment();
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_map, R.id.navigation_history, R.id.navigation_settings
+        ).build();
 
-        if (savedInstanceState != null) {
-            selectedFragment = getSupportFragmentManager().findFragmentByTag(savedInstanceState.getString(SELECTED_FRAGMENT_KEY));
-        } else {
-            selectedFragment = homeFragment; // Default fragment
-        }
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainFrame, selectedFragment, selectedFragment.getClass().getSimpleName())
-                .commit();
-        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.home) {
-                    selectedFragment = homeFragment;
-                } else if (itemId == R.id.map) {
-                    selectedFragment = mapFragment;
-                } else if (itemId == R.id.history) {
-                    selectedFragment = historyFragment;
-                } else if (itemId == R.id.settings) {
-                    selectedFragment = settingsFragment;
-                }
-
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, selectedFragment, selectedFragment.getClass().getSimpleName()).commit();
-
-                return true;
-            }
-        });
+        NavController navController = Navigation.findNavController(this, R.id.mainFrame);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navView, navController);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,12 +60,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save the currently selected fragment
-        getSupportFragmentManager().putFragment(outState, SELECTED_FRAGMENT_KEY, selectedFragment);
     }
 }

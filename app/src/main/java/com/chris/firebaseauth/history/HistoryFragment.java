@@ -269,5 +269,9 @@ public class HistoryFragment extends Fragment implements BarcodeAdapter.OnItemCl
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 
 }

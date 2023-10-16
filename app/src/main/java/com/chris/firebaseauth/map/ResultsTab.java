@@ -90,5 +90,8 @@ public class ResultsTab extends Fragment {
         adapter.setResultsList(filteredList);
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 }
