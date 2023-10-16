@@ -6,5 +6,10 @@
         </item>
 
         <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
+
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorSecondary">@color/purple_700</item>
+        <item name="colorAccent">@color/purple_200</item>
+
     </style>
 </resources>

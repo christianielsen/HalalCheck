@@ -71,10 +71,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata:2.6.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.1"
 
-    //DataStore
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
-    implementation 'androidx.datastore:datastore-preferences-rxjava3:1.0.0'
-
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.8'
 

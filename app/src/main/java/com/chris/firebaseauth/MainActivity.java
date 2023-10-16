@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -57,16 +56,15 @@ public class MainActivity extends AppCompatActivity {
         historyFragment = new HistoryFragment();
         settingsFragment = new SettingsFragment();
 
-        // Check if there's a saved instance state
         if (savedInstanceState != null) {
-            // Restore the selected fragment
-            selectedFragment = getSupportFragmentManager().getFragment(savedInstanceState, SELECTED_FRAGMENT_KEY);
+            selectedFragment = getSupportFragmentManager().findFragmentByTag(savedInstanceState.getString(SELECTED_FRAGMENT_KEY));
         } else {
             selectedFragment = homeFragment; // Default fragment
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, selectedFragment, "").commit();
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainFrame, selectedFragment, selectedFragment.getClass().getSimpleName())
+                .commit();
         navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -81,10 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = settingsFragment;
                 }
 
-                // Replace the fragment
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.mainFrame, selectedFragment, "")
-                        .commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, selectedFragment, selectedFragment.getClass().getSimpleName()).commit();
 
                 return true;
             }
