@@ -7,9 +7,9 @@
 
         <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
 
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorSecondary">@color/purple_700</item>
-        <item name="colorAccent">@color/purple_200</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="Theme.Material3.Light" parent="Base.Theme.Material3.Light" />

@@ -46,10 +46,10 @@
     <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
-        android:backgroundTint="@color/purple_500"
-        android:tint="@color/purple_500"
-        app:tint="@color/purple_700"
-        app:backgroundTint="@color/purple_500"
+        android:backgroundTint="?attr/colorPrimary"
+        android:tint="?attr/colorPrimary"
+        app:tint="?attr/colorSecondary"
+        app:backgroundTint="?attr/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottomAppBar"

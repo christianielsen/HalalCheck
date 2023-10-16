@@ -11,14 +11,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
         <TextView
             android:id="@+id/productNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:text="ProductName"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -27,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Barcode"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@+id/productNameTV" />
